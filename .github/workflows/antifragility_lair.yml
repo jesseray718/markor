@@ -1,0 +1,17 @@
+name: 🛡️ Antifragility Lair
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  ecosystem-health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🏥 Health Check
+        run: |
+          SCORE=100
+          HARDCODED=$(grep -r "/sdcard/openroot\|/data/data/com.termux" --include="*.py" --include="*.sh" . 2>/dev/null | wc -l)
+          if [ "$HARDCODED" -gt 0 ]; then SCORE=$((SCORE - (HARDCODED * 5))); fi
+          echo "Health Score: $SCORE"
